@@ -19,7 +19,7 @@ class ButtonStatus(Enum):
     Start = 1
     End = 2
 
-g_szVersion = '0.1.4'
+g_szVersion = '0.2.40'
 g_szTitleName = 'Parce zakupki.gov.ru'
 g_szExelPathRead = None
 g_Button = None
