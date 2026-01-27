@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk
 import tkinter as tk 
 from tkinter.messagebox import showerror, showwarning, showinfo
+from tkinter import font
+
 import datetime
 import os
 import requests
@@ -14,12 +16,14 @@ from openpyxl import load_workbook
 from openpyxl.styles import Border, Side
 from openpyxl.utils import column_index_from_string
 from enum import Enum
+import webbrowser
+import subprocess
 
 class ButtonStatus(Enum):
     Start = 1
     End = 2
 
-g_szVersion = '0.2.40'
+g_szVersion = '0.2.0'
 g_szTitleName = 'Parce zakupki.gov.ru'
 g_szExelPathRead = None
 g_Button = None
@@ -68,6 +72,16 @@ def cmd_selectall(self):
     self.widget.select_range(0, 'end')
     self.widget.icursor('end')
 
+def GUI_Click_Text(URL):
+    webbrowser.open(URL)
+
+def GUI_OpenResultFolder():
+    g_szPath_Script = os.getcwd()
+    global g_szExelPathRead
+    g_szExelPathRead = g_szPath_Script + '\\Результаты поиска'
+    if not os.path.exists(g_szExelPathRead):
+        os.mkdir(g_szExelPathRead)
+    subprocess.Popen(r'explorer ' + g_szExelPathRead)
 
 def GUI_KeyBind(e):
     if e.keycode == 86 and e.keysym != 'v':
@@ -88,7 +102,9 @@ def GUI_Start():
     g_Root.title(g_szTitleName)
     g_Root.geometry("300x150")
 
-    text = tk.Label(g_Root, text="Ссылка на поиск с фильтрами", font=("Arial", 12)) 
+    HyperLinkFontStyle = font.Font(family = "Arial", size = 12, underline = True)
+    text = tk.Label(g_Root, fg="blue", text="Ссылка на поиск с фильтрами", cursor="hand2", font=HyperLinkFontStyle)
+    text.bind("<Button-1>", lambda e: GUI_Click_Text('https://zakupki.gov.ru/epz/contract'))
     text.pack(anchor=CENTER)
 
     global g_EntryName
@@ -96,13 +112,13 @@ def GUI_Start():
     g_EntryName.pack(anchor=CENTER, pady=1, fill=X)
 
 
-    text = tk.Label(g_Root, text="Название таблицы", font=("Arial", 12)) 
+    text = tk.Label(g_Root, fg="blue", text="Название таблицы", cursor="hand2", font=HyperLinkFontStyle)
+    text.bind("<Button-1>", lambda e: GUI_OpenResultFolder())
     text.pack(anchor=CENTER)
 
     global g_EntryTableName
     g_EntryTableName = ttk.Entry()
     g_EntryTableName.pack(anchor=CENTER, pady=1, fill=X)
-
 
     global g_EntryLabel
     g_EntryLabel = ttk.Label()
@@ -113,8 +129,7 @@ def GUI_Start():
     g_Button.pack(anchor=CENTER, pady=1)
 
     text = tk.Label(g_Root, text=f'v {g_szVersion}', font=("Arial", 10)) 
-    # text.pack(side=RIGHT)
-    text.place(x=250, y=120) # x=50px от левого края, y=50px от верхнего [2]
+    text.place(x=250, y=120)
 
     g_EntryTableName.bind('<Control-KeyPress>', GUI_KeyBind)
     g_EntryName.bind('<Control-KeyPress>', GUI_KeyBind)
@@ -139,7 +154,7 @@ def GetInfoByID(ID):
         if (len(name) > 0):
             name = name[0].strip()
     
-        inn = IsKeyCopy(preKey + 'td[1]//section[contains(@class, "blockInfo__section")]/span[2]/text()', tree)
+        inn = IsKeyCopy(preKey + 'td[@class="tableBlock__col tableBlock__col_first text-break"]//section[span[contains(text(),"ИНН:")]]/span[2]/text()', tree)
         if (len(inn ) > 0):
             inn = inn[0].strip()
 
@@ -320,7 +335,7 @@ def Parce_Start(URL, TableName):
         return
 
 def Main():
-    if (int(datetime.datetime.now().strftime("%Y%m%d%H%M%S")) > 20260209084754):
+    if (int(datetime.datetime.now().strftime("%Y%m%d%H%M%S")) > 20260212084754):
         showerror(title=g_szTitleName, message="Лицензия не действительна, " \
         "обратись к сис. админу для продления!")
         return
