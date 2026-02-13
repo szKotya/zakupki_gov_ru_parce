@@ -335,7 +335,7 @@ def Parce_Start(URL, TableName):
         return
 
 def Main():
-    if (int(datetime.datetime.now().strftime("%Y%m%d%H%M%S")) > 20260212084754):
+    if (int(datetime.datetime.now().strftime("%Y%m%d%H%M%S")) > 20260312084754):
         showerror(title=g_szTitleName, message="Лицензия не действительна, " \
         "обратись к сис. админу для продления!")
         return
