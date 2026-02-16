@@ -23,7 +23,7 @@ class ButtonStatus(Enum):
     Start = 1
     End = 2
 
-g_szVersion = '0.2.0'
+g_szVersion = '0.3.0'
 g_szTitleName = 'Parce zakupki.gov.ru'
 g_szExelPathRead = None
 g_Button = None
@@ -322,6 +322,15 @@ def Parce_Start(URL, TableName):
             showinfo(title=g_szTitleName, message="Поиск завершен, но не успешно!")
             ResetSearch()
             return
+        
+        seen = set()
+        subDATA = []
+        for ID in DATA:
+            if ID['inn'] not in seen:
+                if ID['inn'] != "":
+                    seen.add(ID['inn'])
+                subDATA.append(ID)
+        DATA = subDATA                
 
         ToExcel(DATA, TableName)
 
@@ -346,4 +355,3 @@ def Main():
 
 if __name__ == "__main__":
     Main()
-
