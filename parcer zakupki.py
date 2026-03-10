@@ -23,7 +23,7 @@ class ButtonStatus(Enum):
     Start = 1
     End = 2
 
-g_szVersion = '0.3.0'
+g_szVersion = '0.3.1'
 g_szTitleName = 'Parce zakupki.gov.ru'
 g_szExelPathRead = None
 g_Button = None
@@ -344,7 +344,7 @@ def Parce_Start(URL, TableName):
         return
 
 def Main():
-    if (int(datetime.datetime.now().strftime("%Y%m%d%H%M%S")) > 20260312084754):
+    if (int(datetime.datetime.now().strftime("%Y%m%d%H%M%S")) > 20260412084754):
         showerror(title=g_szTitleName, message="Лицензия не действительна, " \
         "обратись к сис. админу для продления!")
         return
